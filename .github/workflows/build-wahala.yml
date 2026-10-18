@@ -24,19 +24,25 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Setup Android SDK
+    - name: Setup Android SDK (base)
       uses: android-actions/setup-android@v3
       with:
-        packages: 'platform-tools "platforms;android-34" "build-tools;34.0.0"'
         accept-android-sdk-licenses: true
 
-    - name: Install System Tools
+    - name: Install Android SDK Packages
+      run: |
+        sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+      shell: powershell
+
+    - name: Install System Tools (mingw-w64, apktool)
       run: |
         choco install mingw --no-progress -y
+        
         Invoke-WebRequest -Uri "https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat" -OutFile "apktool.bat"
         Invoke-WebRequest -Uri "https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar" -OutFile "apktool.jar"
         Move-Item apktool.jar C:\Windows\apktool.jar
         Move-Item apktool.bat C:\Windows\apktool.bat
+        
         echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       shell: powershell
 
