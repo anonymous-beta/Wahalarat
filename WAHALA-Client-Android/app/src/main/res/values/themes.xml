@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.WAHALA" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#1B7A3D</item>
+        <item name="colorPrimaryVariant">#0B3B24</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+    </style>
+</resources>
