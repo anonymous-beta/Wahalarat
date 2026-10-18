@@ -27,11 +27,12 @@ jobs:
     - name: Setup Android SDK (base)
       uses: android-actions/setup-android@v3
       with:
+        packages: platform-tools
         accept-android-sdk-licenses: true
 
     - name: Install Android SDK Packages
       run: |
-        sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+        sdkmanager "platforms;android-34" "build-tools;34.0.0"
       shell: powershell
 
     - name: Install System Tools (mingw-w64, apktool)
