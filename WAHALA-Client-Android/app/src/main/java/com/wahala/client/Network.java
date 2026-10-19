@@ -1,6 +1,12 @@
 package com.wahala.client;
 
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
+
 import java.util.concurrent.TimeUnit;
 
 public class Network {
@@ -22,11 +28,14 @@ public class Network {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 String handshake = "{\"platform\":\"android\",\"rooted\":false}";
-                webSocket.send(okhttp3.ByteString.of(Crypto.encrypt(handshake)));
+                byte[] encrypted = Crypto.encrypt(handshake);
+                if (encrypted != null) {
+                    webSocket.send(ByteString.of(encrypted));
+                }
             }
 
             @Override
-            public void onMessage(WebSocket webSocket, okhttp3.ByteString bytes) {
+            public void onMessage(WebSocket webSocket, ByteString bytes) {
                 String cmd = Crypto.decrypt(bytes.toByteArray());
                 if (cmd != null) {
                     service.handleCommand(cmd);
@@ -42,7 +51,10 @@ public class Network {
 
     public void send(String data) {
         if (webSocket != null) {
-            webSocket.send(okhttp3.ByteString.of(Crypto.encrypt(data)));
+            byte[] encrypted = Crypto.encrypt(data);
+            if (encrypted != null) {
+                webSocket.send(ByteString.of(encrypted));
+            }
         }
     }
 
