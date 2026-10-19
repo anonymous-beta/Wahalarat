@@ -62,24 +62,31 @@ jobs:
 
     - name: Prepare Windows Client Source
       run: |
-        # Create the exact folder structure the C# builder expects
         New-Item -ItemType Directory -Force -Path "src\WAHALA.Server\ClientSource\src"
         Copy-Item -Path "WAHALA-Client-Win\src\*" -Destination "src\WAHALA.Server\ClientSource\src\" -Recurse -Force
       shell: powershell
 
     - name: Restore and Publish WPF Server
       run: |
-        cd src\WAHALA.Server
+        $csproj = Get-ChildItem -Path . -Recurse -Filter "WAHALA.Server.csproj" | Select-Object -First 1
+        if (-not $csproj) {
+          Write-Error "WAHALA.Server.csproj not found anywhere in the repository. Please create it."
+          exit 1
+        }
+        
+        $projDir = $csproj.DirectoryName
+        Write-Host "Building from: $projDir"
+        cd $projDir
+        
         dotnet restore
-        dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -o ..\..\publish
+        dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true -o "$PWD\..\..\..\publish"
       shell: powershell
 
     - name: Package Final Artifacts
       run: |
-        # Copy the correctly structured ClientSource into the publish folder so it sits next to the .exe
+        # Ensure the publish folder and ClientSource are packaged together
         Copy-Item -Path "src\WAHALA.Server\ClientSource" -Destination "publish\ClientSource" -Recurse -Force
         
-        # Zip the publish folder contents
         Compress-Archive -Path "publish\*" -DestinationPath "WAHALA_RAT_Server_v1.0.zip" -Force
       shell: powershell
 
