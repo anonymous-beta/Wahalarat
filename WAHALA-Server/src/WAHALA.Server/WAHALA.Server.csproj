@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -13,14 +12,11 @@
     <Company>Anonymous-beta</Company>
     <Product>WAHALA RAT</Product>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\monkey-logo.png" />
     <Resource Include="Assets\icon.ico" />
   </ItemGroup>
-
 </Project>
